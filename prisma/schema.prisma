@@ -1,0 +1,32 @@
+// Prisma schema for Filmes application using SQLite
+// Using string IDs to allow custom UUID generation in app layer
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "sqlite"
+  url      = env("DATABASE_URL")
+}
+
+model Filme {
+  id           String     @id @unique @default(uuid())
+  titulo       String
+  faixaEtaria  String
+  genero       String
+  criadoEm     DateTime   @default(now())
+  atualizadoEm DateTime   @updatedAt
+  // Relação N:N implícita com Ator (Prisma criará a tabela de junção automaticamente)
+  atores       Ator[]
+}
+
+model Ator {
+  id           String     @id @unique @default(uuid())
+  nome         String
+  criadoEm     DateTime   @default(now())
+  atualizadoEm DateTime   @updatedAt
+  // Lado inverso da relação N:N implícita
+  filmes       Filme[]
+}
+
